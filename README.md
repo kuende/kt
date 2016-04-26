@@ -26,7 +26,7 @@ kt.set("japan", "tokyo") # set a key
 kt.set_bulk({"china": "beijing", "france": "paris"})
 
 kt.get("japan") # => "tokyo"
-kt.get_bulk(["japan", "france"]) => {"japan": "tokyo", "france": "paris"}
+kt.get_bulk(["japan", "france"]) # => {"japan": "tokyo", "france": "paris"}
 kt.get("foo") # => nil
 kt.get!("foo") # => raises KT::RecordNotFound
 
