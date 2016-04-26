@@ -142,6 +142,14 @@ describe KT do
     end
   end
 
+  describe "clear" do
+    it "clears the database" do
+      kt.count.should_not eq(0)
+      kt.clear
+      kt.count.should eq(0)
+    end
+  end
+
   describe "binary" do
     it "sets binary and gets it" do
       kt.set_bulk({"Café" => "foo"})

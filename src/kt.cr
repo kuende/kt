@@ -20,7 +20,7 @@ class KT
     end
   end
 
-  # Count returns the number of records in the database
+  # count returns the number of records in the database
   def count : Int64
     status, m = do_rpc("/rpc/status", nil)
     if status != 200
@@ -28,6 +28,15 @@ class KT
     end
 
     find_rec(m, "count").value.to_i64
+  end
+
+  # clear removes all records in the database
+  def clear
+    status, m = do_rpc("/rpc/clear", nil)
+
+    if status != 200
+      raise_error(m)
+    end
   end
 
   # get retrieves the data stored at key.
