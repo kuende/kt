@@ -33,6 +33,7 @@ kt.get!("foo") # => raises KT::RecordNotFound
 kt.remove("japan") # => true
 kt.remove("japan") # => false, key japan is not found anymore
 kt.remove!("japan") # => raises KT::RecordNotFound becouse key japan is not found
+kt.remove_bulk(["japan", "china"]) # => 1 (number keys deleted)
 
 kt.count # => 2 keys in database
 ```
