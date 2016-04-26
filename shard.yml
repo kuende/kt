@@ -7,6 +7,6 @@ authors:
 dependencies:
   pool:
     github: ysbaddaden/pool
-    version: ~> 0.2.2
+    branch: master
 
 license: Apache 2
