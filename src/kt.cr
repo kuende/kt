@@ -237,8 +237,4 @@ class KT
       c < 0x20 || c > 0x7e
     end
   end
-
-  # def get(key : String) : String?
-    # response =
-  # end
 end
