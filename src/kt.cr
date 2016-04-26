@@ -142,6 +142,37 @@ class KT
     find_rec(body, "num").value.to_i64
   end
 
+  # match_prefix performs the match_prefix operation against the server
+  # It returns a sorted list of keys.
+  # max_records defines the number of results to be returned
+  # if negative, it means unlimited
+  def match_prefix(prefix : String, max_records : Int) : Array(String)
+    req = [
+      KV.new("prefix", prefix),
+      KV.new("max", max_records.to_s)
+    ]
+
+    status, body = do_rpc("/rpc/match_prefix", req)
+
+    if status != 200
+      raise_error(body)
+    end
+
+    res = [] of String
+
+    body.each do |kv|
+      if kv.key.starts_with?('_')
+        res << kv.key[1, kv.key.size - 1]
+      end
+    end
+
+    return res
+  end
+
+  def match_prefix(prefix : String) : Array(String)
+    match_prefix(prefix, -1)
+  end
+
   def do_rpc(path : String, values : Array(KV) | Nil) : Tuple(Int32, Array(KV))
     body, encoding = encode_values(values)
     headers = HTTP::Headers{"Content-Type": encoding}

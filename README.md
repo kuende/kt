@@ -35,6 +35,9 @@ kt.remove("japan") # => false, key japan is not found anymore
 kt.remove!("japan") # => raises KT::RecordNotFound becouse key japan is not found
 kt.remove_bulk(["japan", "china"]) # => 1 (number keys deleted)
 
+kt.set_bulk({"user:1": "1", "user:2": "2", "user:4": "4"})
+kt.match_prefix("user:") => ["user:1", "user:2", "user:3", "user:4", "user:5"]
+
 kt.count # => 2 keys in database
 ```
 

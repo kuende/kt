@@ -126,6 +126,22 @@ describe KT do
     end
   end
 
+  describe "match_prefix" do
+    it "returns nothing for not found prefix" do
+      kt.match_prefix("user:", 100).should eq([] of String)
+    end
+
+    it "returns correct results sorted" do
+      kt.set_bulk({"user:1": "1", "user:2": "2", "user:4": "4"})
+      kt.set_bulk({"user:3": "3", "user:5": "5"})
+      kt.set_bulk({"usera": "aaa", "users:bbb": "bbb"})
+
+      kt.match_prefix("user:").should eq(["user:1", "user:2", "user:3", "user:4", "user:5"])
+      # It returns the results in random order
+      kt.match_prefix("user:", 2).size.should eq(2)
+    end
+  end
+
   describe "binary" do
     it "sets binary and gets it" do
       kt.set_bulk({"Café" => "foo"})
