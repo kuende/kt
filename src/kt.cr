@@ -1,11 +1,14 @@
 require "./kt/*"
 require "pool/connection"
+require "http/client"
 
 class KT
   @host : String
   @port : Int32
   @poolsize : Int32
   @timeout : Float64
+
+  @pool : ConnectionPool(HTTP::Client)
 
   IDENTITY_ENCODING = "text/tab-separated-values"
   BASE64_ENCODING = "text/tab-separated-values; colenc=B"
@@ -262,13 +265,17 @@ class KT
   	# the end of the string. Just look for B, U or s
   	# (last character of tab-separated-values)
   	# to figure out which field encoding is used.
+
     case content_type.chars.last
     when 'B'
       # base64 decode
+      method = -> (x : String) { base64_decode(x) }
     when 'U'
       # url decode
+      method = -> (x : String) { url_decode(x) }
     when 's'
       # identity decode
+      method = -> (x : String) { identity_decode(x) }
     else
       raise "kt responded with unknown content-type: #{content_type}"
     end
@@ -277,7 +284,7 @@ class KT
   	# are by scanning through the input and counting the \n's
     kv = body.each_line.map do |line|
       key, value = line.chomp.split("\t")
-      KV.new(key, value)
+      KV.new(method.call(key), method.call(value))
     end.to_a
 
     kv.to_a
@@ -314,6 +321,18 @@ class KT
 
   def encode_values(kv : Nil)
     {"", IDENTITY_ENCODING}
+  end
+
+  def identity_decode(value : String) : String
+    value
+  end
+
+  def base64_decode(value : String) : String
+    Base64.decode_string(value)
+  end
+
+  def url_decode(value : String) : String
+    URI.unescape(value)
   end
 
   def has_binary?(value : String) : Bool

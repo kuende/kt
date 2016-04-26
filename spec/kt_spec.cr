@@ -248,5 +248,10 @@ describe KT do
       kt.set_bulk({"foo" => "Café"})
       kt.get_bulk(["foo"]).should eq({"foo": "Café"})
     end
+
+    it "sets string using newlines and gets it" do
+      kt.set_bulk({"foo": "my\n\ttest"})
+      kt.get_bulk(["foo"]).should eq({"foo": "my\n\ttest"})
+    end
   end
 end
