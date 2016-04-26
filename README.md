@@ -23,7 +23,7 @@ kt = KT.new(host: "127.0.0.1", port: 1978, poolsize: 5, timeout: 5.0)
 
 # Setting
 kt.set("japan", "tokyo") # set a key
-kt.set_bulk({"china": "beijing", "france": "paris"})
+kt.set_bulk({"china": "beijing", "france": "paris", "uk": "london"})
 
 kt.get("japan") # => "tokyo"
 kt.get_bulk(["japan", "france"]) # => {"japan": "tokyo", "france": "paris"}
