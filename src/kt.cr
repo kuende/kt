@@ -108,15 +108,25 @@ class KT
   end
 
   # remove deletes the data at key in the database.
-  def remove(key : String)
+  def remove(key : String) : Bool
     status, body = do_rest("DELETE", key, nil)
 
     if status == 404
-      raise KT::RecordNotFound.new
+      return false
     end
 
     if status != 204
       raise body
+    end
+
+    true
+  end
+
+  # remove! deletes the data at key in the database
+  # it raises KT::RecordNotFound if key was not found
+  def remove!(key : String)
+    unless remove(key)
+      raise KT::RecordNotFound.new("key #{key} was not found")
     end
   end
 

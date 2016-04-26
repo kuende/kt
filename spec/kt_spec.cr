@@ -24,11 +24,59 @@ describe KT do
     end
   end
 
-  describe "get/set" do
+  describe "get/set/remove" do
     it "sets a few keys then it gets them" do
       ["a", "b", "c"].each do |k|
         kt.set(k, k + "aaa")
         kt.get(k).should eq(k + "aaa")
+      end
+    end
+
+    it "removes a key" do
+      kt.set("to/be/removed", "42")
+      kt.remove("to/be/removed")
+      kt.get("to/be/removed").should eq(nil)
+    end
+
+    it "get returns nil if not found" do
+      kt.get("not/existing").should eq(nil)
+    end
+
+    describe "get!" do
+      it "returns a string if existing" do
+        kt.set("foo", "bar")
+        kt.get("foo").should eq("bar")
+      end
+
+      it "raises error if not found" do
+        expect_raises(KT::RecordNotFound) do
+          kt.get!("not/existing")
+        end
+      end
+    end
+
+    describe "remove" do
+      it "returns true if key was deleted" do
+        kt.set("foo", "bar")
+        kt.remove("foo").should eq(true)
+      end
+
+      it "returns false if key was not found" do
+        kt.remove("not/existing").should eq(false)
+      end
+    end
+
+    describe "remove!" do
+      it "returns nothing if key was deleted" do
+        kt.set("foo", "bar")
+        kt.remove("foo")
+        kt.get("foo").should eq(nil)
+      end
+
+      it "raises error if not found" do
+        expect_raises(KT::RecordNotFound) do
+          kt.remove!("not/existing")
+        end
       end
     end
   end
@@ -75,6 +123,16 @@ describe KT do
     it "returns the number of keys deleted" do
       kt.set_bulk({"foo7": "7", "foo8": "8", "foo9": "9"})
       kt.remove_bulk(["foo7", "foo8", "foo9", "foo1000"]).should eq(3)
+    end
+  end
+
+  describe "binary" do
+    it "sets binary and gets it" do
+      kt.set_bulk({"Café" => "foo"})
+      kt.get("Café").should eq("foo")
+
+      kt.set_bulk({"foo" => "Café"})
+      kt.get_bulk(["foo"]).should eq({"foo": "Café"})
     end
   end
 end
