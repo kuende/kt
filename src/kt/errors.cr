@@ -4,4 +4,7 @@ class KT
 
   class Error < Exception
   end
+
+  class CASFailed < Exception
+  end
 end

@@ -182,6 +182,40 @@ class KT
     match_prefix(prefix, -1)
   end
 
+  # cas executes a compare and swap operation
+  # if both old and new provided it sets to new value if previous value is old value
+  # if no old value provided it will set to new value if key is not present in db
+  # if no new value provided it will remove the record if it exists
+  # it returns true if it succeded or false otherwise
+  def cas(key : String, oval : String?, nval : String?) : Bool
+    req = [KV.new("key", key)]
+    if oval != nil
+      req << KV.new("oval", oval.not_nil!)
+    end
+    if nval != nil
+      req << KV.new("nval", nval.not_nil!)
+    end
+
+    status, body = do_rpc("/rpc/cas", req)
+
+    if status == 450
+      return false
+    end
+
+    if status != 200
+      raise_error(body)
+    end
+
+    true
+  end
+
+  # cas! works the same as cas but it raises error on failure
+  def cas!(key : String, oval : String?, nval : String?)
+    if !cas(key, oval, nval)
+      raise KT::CASFailed.new("Failed compare and swap for #{key}")
+    end
+  end
+
   def do_rpc(path : String, values : Array(KV) | Nil) : Tuple(Int32, Array(KV))
     body, encoding = encode_values(values)
     headers = HTTP::Headers{"Content-Type": encoding}

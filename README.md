@@ -40,6 +40,18 @@ kt.clear # deletes all records in the database
 kt.set_bulk({"user:1": "1", "user:2": "2", "user:4": "4"})
 kt.match_prefix("user:") => ["user:1", "user:2", "user:3", "user:4", "user:5"]
 
+# Compare and swap
+kt.set("user:1", "1")
+kt.cas("user:1", "1", "2") => true
+kt.cas("user:1", "1", "3") => false, previous value is "2"
+kt.cas("user:1", nil, "3") => false, record already exists with value "2"
+kt.cas("user:2", nil, "1") => true, no record exists so it was set
+kt.cas("user:1", "2", nil) => true, record is removed becouse it was present
+kt.cas("user:1", "2", nil) => false, it fails becouse no record with this key exists
+
+# cas! raises where cas returns false
+kt.cas!("user:1", "1", "2") => KT::CASFailed, no record exists with this value
+
 kt.count # => 2 keys in database
 ```
 

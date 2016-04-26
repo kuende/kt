@@ -150,6 +150,96 @@ describe KT do
     end
   end
 
+  describe "cas" do
+    describe "with old and new" do
+      it "sets new value if old value is correct and returns true" do
+        kt.set("cas:1", "1")
+        kt.cas("cas:1", "1", "2").should eq(true)
+        kt.get("cas:1").should eq("2")
+      end
+
+      it "returns false if old value is not equal" do
+        kt.set("cas:2", "3")
+        kt.cas("cas:2", "1", "2").should eq(false)
+        kt.get("cas:2").should eq("3")
+      end
+    end
+
+    describe "without old value" do
+      it "sets the value if no record exists in db and returns true" do
+        kt.cas("cas:3", nil, "5").should eq(true)
+        kt.get("cas:3").should eq("5")
+      end
+
+      it "returns false if record exists in db" do
+        kt.set("cas:4", "2")
+        kt.cas("cas:4", nil, "5").should eq(false)
+        kt.get("cas:4").should eq("2")
+      end
+    end
+
+    describe "without new value" do
+      it "removes record if it exists in db and returns true" do
+        kt.set("cas:5", "1")
+        kt.cas("cas:5", "1", nil).should eq(true)
+        kt.get("cas:5").should eq(nil)
+      end
+
+      it "returns false if no record exists in db" do
+        kt.cas("cas:6", "1", nil).should eq(false)
+        kt.get("cas:6").should eq(nil)
+      end
+    end
+  end
+
+  describe "cas" do
+    describe "with old and new" do
+      it "sets new value if old value is correct" do
+        kt.set("cas!:1", "1")
+        kt.cas!("cas!:1", "1", "2")
+        kt.get("cas!:1").should eq("2")
+      end
+
+      it "raises error if old value is not equal" do
+        kt.set("cas!:2", "3")
+        expect_raises(KT::CASFailed) do
+          kt.cas!("cas!:2", "1", "2")
+        end
+        kt.get("cas!:2").should eq("3")
+      end
+    end
+
+    describe "without old value" do
+      it "sets the value if no record exists in db" do
+        kt.cas!("cas!:3", nil, "5")
+        kt.get("cas!:3").should eq("5")
+      end
+
+      it "raises error if record exists in db" do
+        kt.set("cas!:4", "2")
+        expect_raises(KT::CASFailed) do
+          kt.cas!("cas!:4", nil, "5")
+        end
+        kt.get("cas!:4").should eq("2")
+      end
+    end
+
+    describe "without new value" do
+      it "removes record if it exists in db" do
+        kt.set("cas!:5", "1")
+        kt.cas!("cas!:5", "1", nil)
+        kt.get("cas!:5").should eq(nil)
+      end
+
+      it "raises error if no record exists in db" do
+        expect_raises(KT::CASFailed) do
+          kt.cas!("cas!:6", "1", nil)
+        end
+        kt.get("cas!:6").should eq(nil)
+      end
+    end
+  end
+
   describe "binary" do
     it "sets binary and gets it" do
       kt.set_bulk({"Café" => "foo"})
