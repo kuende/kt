@@ -14,7 +14,11 @@ class KT
 	BASE64_HEADERS = HTTP::Headers{"Content-Type": BASE64_ENCODING}
   EMPTY_HEADERS = HTTP::Headers.new
 
-  def initialize(@host, @port, @poolsize, @timeout)
+  def initialize(host : String, port : Int32, poolsize = 5, timeout = 5.0)
+    @host = host || "127.0.0.1"
+    @port = port || 1978
+    @poolsize = poolsize
+    @timeout = timeout
     @pool = ConnectionPool.new(capacity: @poolsize, timeout: @timeout) do
       HTTP::Client.new(@host, @port)
     end
