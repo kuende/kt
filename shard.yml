@@ -1,0 +1,12 @@
+name: kt
+version: 0.1.0
+
+authors:
+  - Teodor Pripoae <teodor.pripoae@gmail.com>
+
+dependencies:
+  pool:
+    github: ysbaddaden/pool
+    version: ~> 0.2.2
+
+license: Apache 2
