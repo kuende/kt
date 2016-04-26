@@ -23,7 +23,6 @@ def stop_server(process : Process)
   Process.kill(Signal::KILL, process.pid)
 end
 
-
 def server_connected?(host : String, port : Int32) : Bool
   begin
     socket = TCPSocket.new(host, port)
