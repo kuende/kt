@@ -4,7 +4,7 @@ HOST = "127.0.0.1"
 PORT = 1979
 
 cmd = start_server(HOST, PORT)
-kt = KT.new(HOST, PORT)
+kt = KT.new(host: HOST, port: PORT, poolsize: 5, timeout: 5.0)
 
 at_exit do
   stop_server(cmd)
