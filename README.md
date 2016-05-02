@@ -55,6 +55,11 @@ kt.cas!("user:1", "1", "2") # => KT::CASFailed, no record exists with this value
 kt.count # => 2 keys in database
 ```
 
+### TODO
+
+- [ ] implement expiration for most commands
+- [ ] work with multiple servers
+
 ## Contributing
 
 1. Fork it ( https://github.com/kuende/kt/fork )
