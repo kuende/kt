@@ -13,8 +13,8 @@ class KT
   IDENTITY_ENCODING = "text/tab-separated-values"
   BASE64_ENCODING = "text/tab-separated-values; colenc=B"
 
-  IDENTITY_HEADERS = HTTP::Headers{"Content-Type": IDENTITY_ENCODING}
-	BASE64_HEADERS = HTTP::Headers{"Content-Type": BASE64_ENCODING}
+  IDENTITY_HEADERS = HTTP::Headers{"Content-Type" => IDENTITY_ENCODING}
+  BASE64_HEADERS = HTTP::Headers{"Content-Type" => BASE64_ENCODING}
   EMPTY_HEADERS = HTTP::Headers.new
 
   def initialize(@host : String = "127.0.0.1", @port : Int32 = 1978, @poolsize : Int32 = 5, @timeout : Float64 = 5.0)
@@ -221,7 +221,7 @@ class KT
 
   def do_rpc(path : String, values : Array(KV) | Nil) : Tuple(Int32, Array(KV))
     body, encoding = encode_values(values)
-    headers = HTTP::Headers{"Content-Type": encoding}
+    headers = HTTP::Headers{"Content-Type" => encoding}
     @pool.connection do |conn|
       res = conn.post(path, headers: headers, body: body)
       return res.status_code, decode_values(res.body, res.headers.get("Content-Type").join("; "))
@@ -257,14 +257,14 @@ class KT
 
   def decode_values(body : String, content_type : String)
     # Ideally, we should parse the mime media type here,
-  	# but this is an expensive operation because mime is just
-  	# that awful.
-  	#
-  	# KT responses are pretty simple and we can rely
-  	# on it putting the parameter of colenc=[BU] at
-  	# the end of the string. Just look for B, U or s
-  	# (last character of tab-separated-values)
-  	# to figure out which field encoding is used.
+    # but this is an expensive operation because mime is just
+    # that awful.
+    #
+    # KT responses are pretty simple and we can rely
+    # on it putting the parameter of colenc=[BU] at
+    # the end of the string. Just look for B, U or s
+    # (last character of tab-separated-values)
+    # to figure out which field encoding is used.
 
     case content_type.chars.last
     when 'B'

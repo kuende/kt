@@ -88,12 +88,12 @@ describe KT do
 
     it "returns hash with key value" do
       expected = {
-        "cache/news/1": "1",
-    		"cache/news/2": "2",
-    		"cache/news/3": "3",
-    		"cache/news/4": "4",
-    		"cache/news/5": "5",
-    		"cache/news/6": "6"
+        "cache/news/1" => "1",
+        "cache/news/2" => "2",
+        "cache/news/3" => "3",
+        "cache/news/4" => "4",
+        "cache/news/5" => "5",
+        "cache/news/6" => "6"
       }
       expected.each do |k, v|
         kt.set(k, v)
@@ -106,22 +106,22 @@ describe KT do
       kt.set("foo4", "4")
       kt.set("foo5", "5")
 
-      kt.get_bulk(["foo4", "foo5", "foo6"]).should eq({"foo4": "4", "foo5": "5"})
+      kt.get_bulk(["foo4", "foo5", "foo6"]).should eq({"foo4" => "4", "foo5" => "5"})
     end
 
     it "set_bulk sets multiple keys" do
-      kt.set_bulk({"foo7": "7", "foo8": "8", "foo9": "9"})
-      kt.get_bulk(["foo7", "foo8", "foo9"]).should eq({"foo7": "7", "foo8": "8", "foo9": "9"})
+      kt.set_bulk({"foo7" => "7", "foo8" => "8", "foo9" => "9"})
+      kt.get_bulk(["foo7", "foo8", "foo9"]).should eq({"foo7" => "7", "foo8" => "8", "foo9" => "9"})
     end
 
     it "remove_bulk deletes bulk items" do
-      kt.set_bulk({"foo7": "7", "foo8": "8", "foo9": "9"})
+      kt.set_bulk({"foo7" => "7", "foo8" => "8", "foo9" => "9"})
       kt.remove_bulk(["foo7", "foo8", "foo9"])
       kt.get_bulk(["foo7", "foo8", "foo9"]).should eq({} of String => String)
     end
 
     it "returns the number of keys deleted" do
-      kt.set_bulk({"foo7": "7", "foo8": "8", "foo9": "9"})
+      kt.set_bulk({"foo7" => "7", "foo8" => "8", "foo9" => "9"})
       kt.remove_bulk(["foo7", "foo8", "foo9", "foo1000"]).should eq(3)
     end
   end
@@ -132,9 +132,9 @@ describe KT do
     end
 
     it "returns correct results sorted" do
-      kt.set_bulk({"user:1": "1", "user:2": "2", "user:4": "4"})
-      kt.set_bulk({"user:3": "3", "user:5": "5"})
-      kt.set_bulk({"usera": "aaa", "users:bbb": "bbb"})
+      kt.set_bulk({"user:1" => "1", "user:2" => "2", "user:4" => "4"})
+      kt.set_bulk({"user:3" => "3", "user:5" => "5"})
+      kt.set_bulk({"usera" => "aaa", "users:bbb" => "bbb"})
 
       kt.match_prefix("user:").should eq(["user:1", "user:2", "user:3", "user:4", "user:5"])
       # It returns the results in random order
@@ -246,12 +246,12 @@ describe KT do
       kt.get("Café").should eq("foo")
 
       kt.set_bulk({"foo" => "Café"})
-      kt.get_bulk(["foo"]).should eq({"foo": "Café"})
+      kt.get_bulk(["foo"]).should eq({"foo" => "Café"})
     end
 
     it "sets string using newlines and gets it" do
-      kt.set_bulk({"foo": "my\n\ttest"})
-      kt.get_bulk(["foo"]).should eq({"foo": "my\n\ttest"})
+      kt.set_bulk({"foo" => "my\n\ttest"})
+      kt.get_bulk(["foo"]).should eq({"foo" => "my\n\ttest"})
     end
   end
 end
