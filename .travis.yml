@@ -11,9 +11,6 @@ install:
   - popd
   - popd
   - sudo ldconfig
-before_script:
-  - /usr/local/bin/ktserver &
-  - sleep 2
 script:
   - crystal deps
   - crystal spec spec
