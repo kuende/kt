@@ -25,10 +25,10 @@ kt = KT.new(host: "127.0.0.1", port: 1978, poolsize: 5, timeout: 5.0)
 
 # Setting
 kt.set("japan", "tokyo") # set a key
-kt.set_bulk({"china": "beijing", "france": "paris", "uk": "london"})
+kt.set_bulk({"china" => "beijing", "france" => "paris", "uk" => "london"})
 
 kt.get("japan") # => "tokyo"
-kt.get_bulk(["japan", "france"]) # => {"japan": "tokyo", "france": "paris"}
+kt.get_bulk(["japan", "france"]) # => {"japan" => "tokyo", "france" => "paris"}
 kt.get("foo") # => nil
 kt.get!("foo") # => raises KT::RecordNotFound
 
@@ -39,7 +39,7 @@ kt.remove_bulk(["japan", "china"]) # => 1 (number keys deleted)
 
 kt.clear # deletes all records in the database
 
-kt.set_bulk({"user:1": "1", "user:2": "2", "user:4": "4"})
+kt.set_bulk({"user:1" => "1", "user:2" => "2", "user:4" => "4"})
 kt.match_prefix("user:") # => ["user:1", "user:2", "user:3", "user:4", "user:5"]
 
 # Compare and swap
