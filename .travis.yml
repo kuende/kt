@@ -7,7 +7,7 @@ install:
   - pushd /tmp
   - git clone https://github.com/alticelabs/kyoto.git
   - pushd kyoto
-  - make install
+  - sudo make install
   - popd
   - popd
   - sudo ldconfig
