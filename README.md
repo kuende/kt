@@ -1,5 +1,7 @@
 # KT
 
+[![Build Status](https://travis-ci.org/kuende/kt.svg)](https://travis-ci.org/kuende/kt)
+
 Crystal bindings for [Kyoto Tycoon](http://fallabs.com/kyototycoon/). It uses a connection pool to maintain multiple connections.
 
 ## Installation
